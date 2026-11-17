@@ -1,0 +1,115 @@
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/barlow-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/barlow-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/barlow-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/barlow-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/barlowsc-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/barlowsc-700.woff2') format('woff2');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Centred modal dialog. Native <dialog> positions itself centred when opened
+   via showModal(); add a brief fade+scale and a phone-width override. */
+dialog.plaza-modal {
+  margin: auto;
+  animation: dlg-in 180ms ease-out;
+}
+dialog.plaza-modal::backdrop {
+  animation: dlg-fade 180ms ease-out;
+}
+@keyframes dlg-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes dlg-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (max-width: 640px) {
+  dialog.plaza-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+  }
+}
+
+:root {
+  --page: #e7ebf0;
+  --card: #ffffff;
+  --ink: #101922;
+  --bord: #c9d2db;
+  --header: #083e42;
+  --accent: #0c5f64;
+}
+.dark {
+  --page: #0e141b;
+  --card: #141c25;
+  --ink: #e7ebf0;
+  --bord: #2b333d;
+  --header: #061e22;
+  --accent: #1a9ba3;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: 'Barlow', system-ui, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .num {
+  font-family: 'Barlow Semi Condensed', 'Barlow', sans-serif;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+.num { font-variant-numeric: tabular-nums; }

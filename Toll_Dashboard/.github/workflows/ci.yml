@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: toll_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/toll_ci
+      NODE_ENV: test
+    defaults:
+      run:
+        working-directory: Toll_Dashboard/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm', cache-dependency-path: Toll_Dashboard/server/package-lock.json }
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
+
+      - name: Dependency audit (high+)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Migrate + seed + import
+        run: |
+          npm run db:migrate
+          npm run db:seed
+          npm run db:import
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Integration tests
+        run: npm run test:int
+
+  client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Toll_Dashboard/client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm', cache-dependency-path: Toll_Dashboard/client/package-lock.json }
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck + build
+        run: npm run build
+
+      - name: Dependency audit (high+)
+        run: npm audit --audit-level=high
+        continue-on-error: true

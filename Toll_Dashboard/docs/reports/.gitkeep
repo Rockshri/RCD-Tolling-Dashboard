@@ -1,0 +1,10 @@
+Reports from each release live here:
+- test-run-<date>.md (vitest + playwright summary)
+- coverage-<date>.html / .txt
+- sast-<date>.json (semgrep / eslint-security output)
+- audit-<date>.json (npm audit output)
+- dast-<date>.html (ZAP report)
+- a11y-<date>.html (axe + manual screen-reader notes)
+- perf-<date>.md (k6 / autocannon output)
+- restore-<date>.md (backup-restore drill result)
+- known-issues-<date>.md (severity-tagged list)
